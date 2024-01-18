@@ -1,13 +1,10 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
-import GlobalStyles from './styles/Global.tsx'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { NotFoundRoute, Outlet, Route, Router, RouterProvider, rootRouteWithContext } from '@tanstack/react-router'
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import { TanStackRouterDevtools } from '@tanstack/router-devtools'
-import { HomePage } from './views/AdminHome/HomePage.tsx'
-
+import { NotFoundRoute, RouterProvider, Router } from '@tanstack/react-router'
+import { Route } from './routes/__root.tsx'
+import { routeTree } from './routeTree.gen'
 
 declare module '@tanstack/react-router' {
   interface Register {
@@ -16,32 +13,14 @@ declare module '@tanstack/react-router' {
   }
 }
 
-const rootRoute = rootRouteWithContext<{
-  queryClient: QueryClient
-}>()({
-  component: () => (
-    <>
-      <GlobalStyles />
-      <Outlet />
-      <TanStackRouterDevtools position="bottom-right" />
-
-    </>
-  ),
-})
 
 
 export type MainPageTabs = "Ongoing" | "Upcoming" | "Completed"
 
-const Home = new Route({ getParentRoute: () => rootRoute, path: '/', component: () => <HomePage /> })
 
-const newTournamentRoute = new Route({
-  getParentRoute: () => rootRoute,
-  path: 'tournament/new',
-  component: () => <div>New Tournament</div>,
-})
-const notFoundRoute = new NotFoundRoute({ getParentRoute: () => rootRoute, component: () => <div>404</div> })
 
-const routeTree = rootRoute.addChildren([Home])
+const notFoundRoute = new NotFoundRoute({ getParentRoute: () => Route, component: () => <div>404</div> })
+
 
 const queryClient = new QueryClient()
 

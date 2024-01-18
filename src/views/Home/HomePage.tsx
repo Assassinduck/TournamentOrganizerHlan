@@ -1,6 +1,6 @@
 import React from "react"
-import { Home } from "."
 import { CenteredLayout } from "../../layout/CenteredLayout"
+import { Home } from "./Home"
 
 export interface HomePageProps {
 
