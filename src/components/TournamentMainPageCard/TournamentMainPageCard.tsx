@@ -1,4 +1,4 @@
-import {  Tournament } from "@/tournamentTypes/tournament"
+import { Tournament } from "@/tournamentTypes/tournament"
 import React from "react"
 
 export interface TournamentMainPageCardProps {
@@ -11,9 +11,9 @@ const TournamentMainPageCardComponent = ({ tournament }: TournamentMainPageCardP
 
     return (
         <div>
-            <div key={tournament.tournamentId} className="flex flex-row bg-blue-300 rounded-lg shadow-lg ">
+            <div key={tournament.tournamentId} className="flex flex-row bg-blue-300 rounded-lg shadow-lg gap-4 ">
                 <div className="m-4">
-                    <p>{tournament.teams[0].teamName} vs {tournament.teams[1].teamName} </p>
+                    <p>{tournament.teams[0].teamName} vs {tournament.teams[1].teamName} {tournament.gameName} {tournament.tournamentStatus}</p>
                 </div>
             </div>
         </div>

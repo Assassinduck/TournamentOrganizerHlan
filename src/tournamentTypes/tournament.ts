@@ -1,6 +1,5 @@
 type specialGames = "CS:GO" | "Fortnite" | "Minecraft" | "Roblox";
 
-
 type TournamentFormat =
     | SingleEliminationFormat
     | DoubleEliminationFormat
@@ -92,6 +91,7 @@ type Round = {
 export interface Tournament {
     tournamentId: string;
     gameName: string;
+    tournamentStatus: "scheduled" | "ongoing" | "finished";
     currentRound: number;
     tournamentFormat: TournamentFormat;
     teams: Team[];
@@ -199,6 +199,7 @@ const Round1: Round = {
 
 export const tournament1: Tournament = {
     gameName: "CSGO",
+    tournamentStatus: "scheduled",
     tournamentId: "hdhdjhwadw",
     tournamentFormat: {
         type: "single-elimination",
@@ -216,7 +217,64 @@ export const tournament1: Tournament = {
     tournament: [Round1],
 };
 
+export const tournament2: Tournament = {
+    gameName: "CSGO",
+    tournamentStatus: "finished",
+    tournamentId: "hdhdjhwadw",
+    tournamentFormat: {
+        type: "single-elimination",
+        bracketSize: 6,
+        seedingMethod: "manual",
+        matchRules: {
+            format: "bestOfOne",
+        },
+        schedule: {
+            startDate: [new Date()],
+        },
+    },
+    currentRound: 0,
+    teams: [teamA, teamB, teamC, teamD, teamE, teamF],
+    tournament: [Round1],
+};
+export const tournament3: Tournament = {
+    gameName: "CSGO",
+    tournamentStatus: "ongoing",
+    tournamentId: "hdhdjhwadw",
+    tournamentFormat: {
+        type: "single-elimination",
+        bracketSize: 6,
+        seedingMethod: "manual",
+        matchRules: {
+            format: "bestOfOne",
+        },
+        schedule: {
+            startDate: [new Date()],
+        },
+    },
+    currentRound: 0,
+    teams: [teamA, teamB, teamC, teamD, teamE, teamF],
+    tournament: [Round1],
+};
+export const tournament4: Tournament = {
+    gameName: "CSGO",
+    tournamentStatus: "scheduled",
+    tournamentId: "hdhdjhwadw",
+    tournamentFormat: {
+        type: "single-elimination",
+        bracketSize: 6,
+        seedingMethod: "manual",
+        matchRules: {
+            format: "bestOfOne",
+        },
+        schedule: {
+            startDate: [new Date()],
+        },
+    },
+    currentRound: 0,
+    teams: [teamA, teamB, teamC, teamD, teamE, teamF],
+    tournament: [Round1],
+};
 
 export const tournamentList: TournamentList = {
-    tournaments: [tournament1],
+    tournaments: [tournament1, tournament2, tournament3, tournament4],
 };
