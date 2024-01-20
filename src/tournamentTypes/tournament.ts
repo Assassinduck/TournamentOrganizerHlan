@@ -200,7 +200,7 @@ const Round1: Round = {
 export const tournament1: Tournament = {
     gameName: "CSGO",
     tournamentStatus: "scheduled",
-    tournamentId: "hdhdjhwadw",
+    tournamentId: "hdhdjhwadw4",
     tournamentFormat: {
         type: "single-elimination",
         bracketSize: 6,
@@ -220,7 +220,7 @@ export const tournament1: Tournament = {
 export const tournament2: Tournament = {
     gameName: "CSGO",
     tournamentStatus: "finished",
-    tournamentId: "hdhdjhwadw",
+    tournamentId: "hdhdjhwadw3",
     tournamentFormat: {
         type: "single-elimination",
         bracketSize: 6,
@@ -239,7 +239,7 @@ export const tournament2: Tournament = {
 export const tournament3: Tournament = {
     gameName: "CSGO",
     tournamentStatus: "ongoing",
-    tournamentId: "hdhdjhwadw",
+    tournamentId: "hdhdjhwadw2",
     tournamentFormat: {
         type: "single-elimination",
         bracketSize: 6,
@@ -258,7 +258,7 @@ export const tournament3: Tournament = {
 export const tournament4: Tournament = {
     gameName: "CSGO",
     tournamentStatus: "scheduled",
-    tournamentId: "hdhdjhwadw",
+    tournamentId: "hdhdjhwadw1",
     tournamentFormat: {
         type: "single-elimination",
         bracketSize: 6,

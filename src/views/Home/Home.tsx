@@ -1,22 +1,30 @@
-import React, { useRef, ElementRef } from "react"
-import { useTest } from "./test"
-import { TournamentList, tournament1, tournamentList } from "@/tournamentTypes/tournament"
+import React, { useRef, ElementRef, useMemo, useEffect } from "react"
+import { Tournament, TournamentList, tournament1, tournamentList } from "@/tournamentTypes/tournament"
 import { TournamentMainPageCard } from "@/components/TournamentMainPageCard/TournamentMainPageCard"
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
 import { Link, useNavigate } from "@tanstack/react-router"
+import { useGetAllTournaments } from "@/views/Home/useGetAllTournaments"
 
 
-interface TournamentListProps {
-    tournamentList: TournamentList
+
+type TournamentListProps = {
+    tournamentsInCategory: TournamentList
 }
 
-const TournamentListComponent = ({ tournaments }: TournamentList) => {
+type sortedTournamentLists = {
+    shedueldTournamentList: TournamentList
+    ongoingTournamentList: TournamentList
+    finishedTournamentList: TournamentList
+
+}
+
+const TournamentCardList = ({ tournamentsInCategory }: TournamentListProps) => {
     return (
         <div>
-            <div className="flex flex-col">
-                {tournaments.map((tournament) => {
+            <div className="flex flex-col gap-2">
+                {tournamentsInCategory.tournaments.map((tournament) => {
                     return (
                         <TournamentMainPageCard key={tournament.tournamentId} tournament={tournament} />
                     )
@@ -24,41 +32,73 @@ const TournamentListComponent = ({ tournaments }: TournamentList) => {
             </div>
         </div>
     )
-
 }
 
-type sortTournaments = {
-    scheduledTournaments: TournamentList
-    ongoingTournaments: TournamentList
-    finishedTournaments: TournamentList
-
-}
 
 const HomeComponent = () => {
     console.log("AdminHomeComponent")
 
-    const { data } = useTest()
+    const { data } = useGetAllTournaments()
     const navigate = useNavigate()
 
-    const SortTournaments = (tournamentList: TournamentList) => {
 
-        const shedueldTournamentListClone = structuredClone(tournamentList)
-        const ongoingTournamentListClone = structuredClone(tournamentList)
-        const completedTournamentListClone = structuredClone(tournamentList)
+    const findAndSortTournaments = useMemo(() => {
+        return (tournamentsList: TournamentList): sortedTournamentLists => {
 
-        const scheduledTournaments = shedueldTournamentListClone.tournaments.filter((tournament) => tournament.tournamentStatus === "scheduled")
-        const ongoingTournaments = ongoingTournamentListClone.tournaments.filter((tournament) => tournament.tournamentStatus === "ongoing")
-        const finishedTournaments = completedTournamentListClone.tournaments.filter((tournament) => tournament.tournamentStatus === "finished")
+            const clonedTournamentsForSchedueld = structuredClone(tournamentsList)
+            const clonedTournamentsForOngoing = structuredClone(tournamentsList)
+            const clonedTournamentsForCompleted = structuredClone(tournamentsList)
 
-        const sortedTournaments: sortTournaments = {
-            scheduledTournaments: { tournaments: scheduledTournaments } satisfies TournamentList,
-            ongoingTournaments: { tournaments: ongoingTournaments } satisfies TournamentList,
-            finishedTournaments: { tournaments: finishedTournaments } satisfies TournamentList
+            const shedueldTournamentList = clonedTournamentsForSchedueld.tournaments.filter((tournament) => {
+                return tournament.tournamentStatus === "scheduled"
+            })
+            const ongoingTournamentList = clonedTournamentsForOngoing.tournaments.filter((tournament) => {
+                return tournament.tournamentStatus === "ongoing"
+            })
+            const finishedTournamentList = clonedTournamentsForCompleted.tournaments.filter((tournament) => {
+                return tournament.tournamentStatus === "finished"
+            })
+            return {
+                shedueldTournamentList: { tournaments: shedueldTournamentList } satisfies TournamentList,
+                ongoingTournamentList: { tournaments: ongoingTournamentList } satisfies TournamentList,
+                finishedTournamentList: { tournaments: finishedTournamentList } satisfies TournamentList
+            } satisfies sortedTournamentLists
         }
-        return sortedTournaments
+    }, [data?.tournaments])
 
-    }
 
+
+    const findSchedueldTournaments = useMemo(() => {
+        return (tournamentsList: TournamentList) => {
+            const shedueldTournamentList = tournamentsList.tournaments.filter((tournament) => {
+                return tournament.tournamentStatus === "scheduled"
+            })
+            return { tournaments: shedueldTournamentList } satisfies TournamentList
+        }
+    }, [data?.tournaments])
+
+
+    const findOngoingTournaments = useMemo(() => {
+        return (tournamentsList: TournamentList) => {
+            const ongoingTournamentList = tournamentsList.tournaments.filter((tournament) => {
+                return tournament.tournamentStatus === "ongoing"
+            })
+            return { tournaments: ongoingTournamentList } satisfies TournamentList
+        }
+    }, [data?.tournaments])
+
+
+    const findFinishedTournaments = useMemo(() => {
+        return (tournamentsList: TournamentList) => {
+            const completedTournamentList = tournamentsList.tournaments.filter((tournament) => {
+                return tournament.tournamentStatus === "finished"
+            })
+            return { tournaments: completedTournamentList } satisfies TournamentList
+        }
+    }, [data?.tournaments])
+
+
+    const SortedTourmentLists = findAndSortTournaments(data ?? { tournaments: [] })
 
     return (
         <div className=" flex flex-col justify-center align-middle">
@@ -77,13 +117,13 @@ const HomeComponent = () => {
                 </Button>
 
                 <TabsContent value="ongoing">
-                    {data && <TournamentListComponent tournaments={SortTournaments(data).ongoingTournaments.tournaments} />}
+                    {data?.tournaments && <TournamentCardList tournamentsInCategory={SortedTourmentLists.ongoingTournamentList} />}
                 </TabsContent>
                 <TabsContent value="scheduled">
-                    {data && <TournamentListComponent tournaments={SortTournaments(data).scheduledTournaments.tournaments} />}
+                    {data?.tournaments && <TournamentCardList tournamentsInCategory={SortedTourmentLists.shedueldTournamentList} />}
                 </TabsContent>
                 <TabsContent value="finished">
-                    {data && <TournamentListComponent tournaments={SortTournaments(data).finishedTournaments.tournaments} />}
+                    {data?.tournaments && <TournamentCardList tournamentsInCategory={SortedTourmentLists.finishedTournamentList} />}
                 </TabsContent>
             </Tabs>
 
